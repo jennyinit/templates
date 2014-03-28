@@ -60,7 +60,7 @@ will run the script with verbose messages
 our $verbose	= 0;	# Controls output verbosity
 our $help	= 0;	# If set to 1, help text will be printed
 our $debug	= 0;	# If set to 1, debug messages will be printed
-our $facility	= "local3"; 
+our $facility	= "local3";
 
 ######################################################################
 # Variables that need to be specified from command line options
@@ -87,7 +87,7 @@ use subs qw(
 
 # This is where the actual script starts
 # First we get the command line options.
-get_options;
+get_options();
 
 =head1 Functions in this script
 
@@ -101,6 +101,7 @@ Description of first function
 
 sub first_function {
   # Actual function goes here
+  return 1;
 }
 
 
@@ -120,7 +121,7 @@ sub get_options {
 			  );
   #  If there's an error parsing the command line options, printout a
   # message with the correct syntax and exit
-  if ($result == 0) {
+  if (not $result) {
     pod2usage();
   }
   # If the -help option is given, just print out syntax, option and
@@ -128,11 +129,12 @@ sub get_options {
   if ($help) {
     pod2usage(1);
   }
+  return 1;
 }
 
 =head3 logmsg("string")
 
-log "string" to syslog, facility local3, loglevel info
+log "string" to syslog, facility $facility, loglevel info
 
 =cut
 
@@ -145,7 +147,7 @@ sub logmsg {
 
 =head3 logerr("string")
 
-log "string" to syslog, facility local3, loglevel error
+log "string" to syslog, facility $facility, loglevel error
 
 =cut
 
@@ -153,6 +155,7 @@ sub logerr {
     dolog({ loglevel	=> "error",
 	    string	=> "@_"
 	  });
+    return 1;
 }
 
 =head3 dolog({loglevel => "loglevel",
@@ -166,9 +169,10 @@ sub dolog {
     my $arg_href = shift;
     my $loglevel = $arg_href->{loglevel};
     my $string	 = $arg_href->{string};
-    openlog "$scriptname ", 'cons,pid' , "$facility";
-    syslog("$loglevel", "$string");
+    openlog "$scriptname ", 'cons,pid' , $facility;
+    syslog($loglevel, "$string");
     closelog;
+    return 1;
 }
 
 =head1 AUTHOR

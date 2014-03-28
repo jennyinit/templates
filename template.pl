@@ -80,7 +80,7 @@ use subs qw(
 
 # This is where the actual script starts
 # First we get the command line options.
-get_options;
+get_options();
 
 =head1 Functions in this script
 
@@ -94,6 +94,7 @@ Description of first function
 
 sub first_function {
   # Actual function goes here
+  return 1;
 }
 
 
@@ -112,7 +113,7 @@ sub get_options {
 			  );
   #  If there's an error parsing the command line options, printout a
   # message with the correct syntax and exit
-  if ($result == 0) {
+  if (not $result) {
     pod2usage();
   }
   # If the -help option is given, just print out syntax, option and
@@ -120,6 +121,7 @@ sub get_options {
   if ($help) {
     pod2usage(1);
   }
+  return 1;
 }
 
 =head3 logmsg("string")
@@ -129,7 +131,8 @@ Print "string" to STDOUT
 =cut
 
 sub logmsg {
-  print ("@_\n");
+  print "@_\n";
+  return 1;
 }
 
 =head3 verbose("string")
@@ -142,6 +145,7 @@ sub verbose {
   if ($verbose) {
     print "@_\n";
   }
+  return 1;
 }
 
 =head3 debug("string")
@@ -154,6 +158,7 @@ sub debug {
   if ($debug) {
     print "@_\n";
   }
+  return 1;
 }
 
 =head3 logerr("string")
@@ -163,7 +168,8 @@ Print "string" to STDERR
 =cut
 
 sub logerr {
-  print "ERROR: @_\n";
+  print STDERR "ERROR: @_\n";
+  return 1;
 }
 
 
@@ -174,5 +180,4 @@ Jenny Dybedahl <jenny.dybedahl@init.se>
 =head1 LICENSE
 
 BSD 3-Clause "New" or "Revised" license - see
-https://github.com/jdybedahl/templates/blob/master/LICENSE for further
-informationfor license
+https://github.com/jdybedahl/templates/blob/master/LICENSE 
